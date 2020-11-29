@@ -40,6 +40,7 @@ LABEL org.label-schema.build-date="${BUILD_DATE}" \
       org.metabrainz.based-on-image="${SOLR_NAME}:${SOLR_TAG}" \
       org.metabrainz.builder-image="maven:${MAVEN_TAG}" \
       org.metabrainz.mb-solr.version="${MB_SOLR_VERSION}"
+LABEL org.opencontainers.image.source https://github.com/lidarr/mb-solr
 
 # Resetting value set in the parent image
 USER root
