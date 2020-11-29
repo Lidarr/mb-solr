@@ -311,8 +311,7 @@ public class MBXMLWriter implements QueryResponseWriter {
 				.orElseThrow(() -> new RuntimeException("no valid entitytype given"));
 	}
 
-	private static void adjustScore(float maxScore, Object object,
-			float objectScore) {
+	private static void adjustScore(Object object, float objectScore) {
 		Method setScoreMethod;
 		try {
 			setScoreMethod = object.getClass().getMethod("setScore",
@@ -322,10 +321,8 @@ public class MBXMLWriter implements QueryResponseWriter {
 					OBJECT_WITHOUT_SETSCORE);
 		}
 
-		int adjustedScore = (((int) (((objectScore / maxScore)) * 100)));
-
 		try {
-			setScoreMethod.invoke(object, adjustedScore);
+                        setScoreMethod.invoke(object, (int) objectScore);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -396,7 +393,6 @@ public class MBXMLWriter implements QueryResponseWriter {
 
 		List xmlList = metadatalistwrapper.getLiveList();
 
-		float maxScore = doclist.maxScore();
 		DocIterator iter = doclist.iterator();
 
 		while (iter.hasNext()) {
@@ -441,7 +437,7 @@ public class MBXMLWriter implements QueryResponseWriter {
 			// TODO: this needs "score" in the field list of Solr, otherwise
 			// this causes a NullPointerException
 			try {
-				adjustScore(maxScore, unmarshalledObj, iter.score());
+				adjustScore(unmarshalledObj, iter.score());
 			} catch (NullPointerException e) {
 				throw new RuntimeException(SCORE_NOT_IN_FIELD_LIST);
 			}
@@ -467,7 +463,6 @@ public class MBXMLWriter implements QueryResponseWriter {
 
 		List xmlList = metadatalistwrapper.getLiveList();
 
-		float maxScore = doclist.getMaxScore();
 		Iterator<SolrDocument> iter = doclist.iterator();
 
 		while (iter.hasNext()) {
@@ -511,7 +506,7 @@ public class MBXMLWriter implements QueryResponseWriter {
 			// TODO: this needs "score" in the field list of Solr, otherwise
 			// this causes a NullPointerException
 			try {
-				adjustScore(maxScore, unmarshalledObj, (float) doc.get("score"));
+				adjustScore(unmarshalledObj, (float) doc.get("score"));
 			} catch (NullPointerException e) {
 				throw new RuntimeException(SCORE_NOT_IN_FIELD_LIST);
 			}
