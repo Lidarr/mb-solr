@@ -58,6 +58,7 @@ COPY --from=builder \
 
 ENV SOLR_HOME /opt/solr/server/solr
 COPY ./mbsssss $SOLR_HOME/mycores/mbsssss
+COPY [ "scripts/*", "/usr/local/bin/" ]
 
 # Pointing default Solr config to our shared lib directory
 # and fix permissions
